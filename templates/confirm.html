@@ -1,0 +1,21 @@
+{% extends 'layout.html' %}
+{% block title %}
+Confirm Code
+{% endblock %}
+{% block main %}
+<div class="container-fluid py-5 text-center" style="max-width: 350px;">
+    <div class="alert alert-info"><p> We have sent you an email to confirm your registration. Please check your inbox and follow the instructions to activate your account. If you don't see the email, please check your spam folder or contact us for assistance.</p> </div>
+    <form action="/confirm" method="post" enctype="multipart/form-data" novalidate>
+        <div class="form-floating mb-3">
+            <input autofocus name="confirmationCode" type="text" class="form-control" id="confirmationCode" placeholder="Enter the 6 characters you received" maxlength="6" pattern="[A-Za-z0-9]{6}" autocomplete="off" required aria-describeby="confirmCheck">
+            <label for="confirmationCode">Confirmation Code</label>
+            <div id='confirmCheck'class="invalid-feedback mt-1" role="alert">{{ msg }}</div>
+        </div>
+        <div class="d-grid gap-2">
+            <button type="submit" name="confirm" value="confirm" class="btn btn-primary" value="confirm">Confirm</button>
+            <button type="submit" name="resend" value="resend" class="btn btn-secondary mt-2" value="resend">Resend Code</button>
+            <div id='resendCodeCheck'class="invalid-feedback mt-1" role="alert"></div>
+        </div>
+    </form>
+</div>
+{% endblock %}
