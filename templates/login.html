@@ -1,0 +1,24 @@
+{% extends 'layout.html' %}
+{% block title %}
+Login
+{% endblock %}
+{% block main %}
+<div class="container-fluid py-5 text-center" onsubmit="disableBtn()" style="max-width: 350px;">
+    <form action="/login" method="post" enctype="multipart/form-data">
+        <section class="form-floating mb-4">
+            <input id="emailInput" autofocus autocomplete="email" name="email" class="form-control" type="email" placeholder="name@example.com" required aria-describedby="emailCheck">
+            <label for="emailInput">Email</label>
+            <div id='emailCheck'class="invalid-feedback" role="alert"></div>
+        </section>
+        <section class="input-group mt-4">
+            <input id="current-password" autocomplete="current-password" name="password" type="password" class="form-control input-box py-3" id="new-password" placeholder="password" required aria-describedby="passCheck">
+            <div class="input-group-text">
+              <i id='togglePasswordButton' class="bi bi-eye-slash"></i>
+            </div>
+            <div id='passCheck'class="invalid-feedback mt-1" role="alert">{{ msg }}</div>
+        </section>
+        <p class='mt-2'>Don't have an account? <a href="/register">Sign up</a></p>
+        <button id='loginBtn' type="submit" class="btn btn-primary mt-3">Sign in</button>
+    </form>
+</div>
+{% endblock %}
