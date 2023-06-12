@@ -5,11 +5,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
-    <style>
-        nav {
-            display: flex;
-        }
-    </style>
     <title>Google Search</title>
 </head>
 <body>
@@ -17,15 +12,25 @@
         <nav>
             <ul>
                 <li><a href="images.html">Google Images</a></li>
-                <li><a href="advance.html">Google Advance Search</a></li>
+                <li><a href="advanced.html">Google Advance Search</a></li>
             </ul>
         </nav>
     </header>
     <main>
-        <form action="https://www.google.com/search">
-            <input type="text" name="q" placeholder="Search..">
-            <input type="submit" value="Google Search">
-        </form>
+        <div style="max-width: 580px; margin-left: auto; margin-right: auto;">
+            <img src="images/google..png" alt="Google Logo">
+            <form action="https://www.google.com/search" autocomplete="off" method="get" role="search">
+                <svg id="search" xmlns="http://www.w3.org/2000/svg" width="17" height="20" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                </svg>
+                <input type="text" name="q">
+                <div class="search">
+                    <input type="submit" value="Google Search">
+                    <input type="submit" name="btnI" value="I'm Feeling Lucky">
+                </div>
+            </form>
+        </div>
+        
     </main>
 </body>
 </html>
