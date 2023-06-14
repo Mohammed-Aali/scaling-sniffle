@@ -1,0 +1,15 @@
+{% extends 'tasks/layout.html' %}
+
+{% block body %}
+    <h1>Add task</h1>
+    <form action="{% url 'tasks:add' %}" method="post">
+        <!-- create a csrf token for form validation -->
+        {% csrf_token %}
+        <!-- form with label new task is created in the backend  -->
+        {{ form }}
+        <input type="submit" value="add">
+    </form>
+    <div style="margin-top: 40px;">
+        <a href="{% url 'tasks:index' %}">View Tasks</a>
+    </div>
+{% endblock %}
