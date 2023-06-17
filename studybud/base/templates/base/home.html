@@ -1,0 +1,15 @@
+{% extends 'base/layout.html'%}
+
+{% block content %} 
+
+<h1> Home Template </h1>
+
+<div>
+    <h3> Rooms --> </h3>
+    <ul>
+        {% for room in rooms %}
+        <li> {{room.id}} -- {{room.name}} -- {{ race }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock%}
