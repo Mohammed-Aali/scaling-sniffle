@@ -1,18 +1,31 @@
 from django.shortcuts import render
-from django.http import HttpResponse
 from django.utils.safestring import mark_safe
+from django import forms, template
 
 from . import util
 
 
+# creating a form class for the layout
+class CreateSearch(forms.Form):
+    q = forms.CharField(label='', widget=forms.TextInput(attrs={"class": "search", "placeholder": "Search Encyclopedia"}))
+
+# dealing with the fact that the form is only on one page with a custom template tag
+
+
+def search_form(request):
+    q = request.GET.get("q", "")
+    form = CreateSearch(request.GET or None, initial={"q": q})
+    return {"form": form}
+
 def index(request):
-    print('here!')
-    if request.method == "POST":
-        print('under the post')
+    form = CreateSearch(request.GET or None)
+    if form.is_valid():
+        q = form.cleaned_data['q']
+        print(q)
         
-    
     return render(request, "encyclopedia/index.html", {
-        "entries": util.list_entries()
+        "entries": util.list_entries(),
+        'form': form
     })
 
 def pages(request, title):
