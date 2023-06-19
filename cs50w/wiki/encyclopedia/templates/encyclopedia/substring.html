@@ -1,0 +1,14 @@
+{% extends 'encyclopedia/layout.html' %}
+
+{% block title%}
+    Suggestions
+{% endblock %}
+
+{% block body %}
+    <h1>Did you mean..</h1>
+    <ul>
+        {% for match in substrings %}
+            <li><a href="{% url 'pages' title=match %}">{{ match }}</a></li>
+        {% endfor%}
+    </ul>
+{% endblock %}

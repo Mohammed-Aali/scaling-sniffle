@@ -1,0 +1,14 @@
+{% extends 'encyclopedia/layout.html' %}
+{% load static %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block body %}
+    <h1>Create a new Page</h1>
+        <form action="{% url 'create'%}" method="POST">
+            {{ forms }} 
+            <input type="submit" name="save" value="save">
+        </form>
+{% endblock %}
