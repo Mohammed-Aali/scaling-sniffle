@@ -6,9 +6,14 @@
 {% endblock %}
 
 {% block body %}
-    <h1>Create a new Page</h1>
+    <h1 id="create_h1">Create a new Page</h1>
         <form action="{% url 'create'%}" method="POST">
-            {{ forms }} 
-            <input type="submit" name="save" value="save">
+            {% csrf_token %}
+            <div class="formBody">
+                {{ forms }} 
+            </div>
+            <div class="formBtn">
+                <input type="submit" name="save" value="Save markdown">
+            </div>
         </form>
 {% endblock %}

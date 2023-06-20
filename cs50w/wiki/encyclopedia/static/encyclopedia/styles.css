@@ -13,7 +13,11 @@ h1 {
 }
 
 textarea {
-    height: 80vh;
+    height: 40vh;
+    width: 80%;
+}
+
+input[type='text'] {
     width: 80%;
 }
 
@@ -37,6 +41,28 @@ textarea {
     margin-top: 5px;
 }
 
-.creation {
-    background-color: blue;
+.formBody {
+    margin-left: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.formBtn {
+    margin-left: 1rem;
+    margin-top: 20px;
+    width: 80%;
+    
+    display: flex;
+    justify-content: center;
+}
+
+.error-title {
+    text-align: center;
+    margin-top: 1rem;
+    margin-bottom: auto;
+}
+
+#create_h1 {
+    margin-left: 1rem;
 }

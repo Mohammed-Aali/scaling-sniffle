@@ -1,4 +1,4 @@
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render, redirect
 from django.utils.safestring import mark_safe
 from django import forms 
 
@@ -11,12 +11,8 @@ class CreateSearch(forms.Form):
 
 # creating a form classs for the create page
 class CreatePage(forms.Form):
-    title = forms.CharField(widget=forms.TextInput(attrs={ 'placeholder': "Title", 'maxlength': '50'}))
-    mark_down = forms.CharField(label='', widget=forms.Textarea(attrs={"placeholder": 'Write the markdown', 'rows': '20', 'column': '6'}))
-
-
-
-# dealing with the fact that the form is only on one page with a custom template tag
+    title = forms.CharField(label='Title:', widget=forms.TextInput(attrs={ 'placeholder': "Title", 'maxlength': '50'}))
+    mark_down = forms.CharField(label='Text body:', widget=forms.Textarea(attrs={"placeholder": 'Write the markdown', 'rows': '20', 'column': '6'}))
 
 
 def search_form(request):
@@ -76,9 +72,19 @@ def pages(request, title):
         
 def create(request):
     form = CreatePage(request.POST or None)
+    # grab the form data (title, markdown)
     if form.is_valid():
         title = form.cleaned_data['title']
-        print(title)
+        mark_down = form.cleaned_data['mark_down']
+        # check if we have a similar title in our entries
+        if title in util.list_entries():
+            # if yes render error
+            return render(request, 'encyclopedia/error.html')
+        else:
+            # else save page to entries and redirect
+            util.save_entry(title, mark_down)
+            return redirect('pages', title=title)
+            
     return render(request, 'encyclopedia/creation.html', {
         'forms': CreatePage(),
         'title': 'Create new page',
