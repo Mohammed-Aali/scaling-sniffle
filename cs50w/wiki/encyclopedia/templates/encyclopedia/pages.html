@@ -6,5 +6,5 @@
 
 {% block body %}
     {{ body }}
-    <a href="{% url 'edit' %}"></a>
+    <a href="{% url 'edit' page=title %}">Edit page</a>
 {% endblock %}

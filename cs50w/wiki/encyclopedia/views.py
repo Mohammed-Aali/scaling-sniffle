@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
 from django.utils.safestring import mark_safe
-from django import forms 
+from django.urls import reverse
+from django import forms
 
+from django.http import HttpResponseRedirect
 from . import util
 
 
@@ -14,6 +16,9 @@ class CreatePage(forms.Form):
     title = forms.CharField(label='Title:', widget=forms.TextInput(attrs={ 'placeholder': "Title", 'maxlength': '50'}))
     mark_down = forms.CharField(label='Text body:', widget=forms.Textarea(attrs={"placeholder": 'Write the markdown', 'rows': '20', 'column': '6'}))
 
+# edit page form
+class EditPage(forms.Form):
+    mark_down_edit = forms.CharField(label='', widget=forms.Textarea(attrs={"placeholder": 'Write the markdown', 'rows': '20', 'column': '6'}))
 
 def search_form(request):
     q = request.GET.get("q", "")
@@ -89,3 +94,42 @@ def create(request):
         'forms': CreatePage(),
         'title': 'Create new page',
     })
+
+def edit(request, page):
+    if request.POST:
+        # get the text of the body
+        edit_text = request.POST.get('mark_down_edit')
+        print('post')
+
+        # save it with the save function
+        util.save_entry(page, edit_text)
+
+        # redirect to entry page
+        return HttpResponseRedirect(reverse('pages', args=[page]))
+    # check if page exists 
+    if page in util.list_entries():
+        # get page and render it
+        page_md = util.get_entry(page)
+        return render(request, 'encyclopedia/edit.html', {
+            'body': page_md,
+            'edit_url': reverse('edit', args=[page])
+        })
+    else: 
+        return render(request, 'encyclopedia/error.html')
+    
+def random(request):
+    import random
+    pages = util.list_entries()
+    # get me a random page
+    page = pages[random.randint(0, len(pages) - 1)]
+    # get the page
+    page_md = util.get_entry(page)
+    # convert it to safe html
+    html = mark_safe(util.md_to_html(page_md))
+
+    return render(request, 'encyclopedia/pages.html', {
+        'title': page,
+        'body': html
+    })
+
+

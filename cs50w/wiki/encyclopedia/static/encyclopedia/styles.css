@@ -66,3 +66,7 @@ input[type='text'] {
 #create_h1 {
     margin-left: 1rem;
 }
+
+#edit_h1 {
+    margin-bottom: 1rem;
+}
