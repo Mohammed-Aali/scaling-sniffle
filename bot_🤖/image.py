@@ -1,8 +1,9 @@
 import requests
+import keys
 
 
 # Define the access key
-access_key = 
+access_key = keys.unsplash_api
 
 # Define the API endpoint
 endpoint = "https://api.unsplash.com/photos?"
