@@ -8,7 +8,8 @@ import keys
 
 def main():
 
-    client = auth(keys.consumer_key, keys.consumer_secret, access_token=keys.access_token, access_token_secret=keys.access_secret)
+    api_v1 = auth(keys.consumer_key, keys.consumer_secret, access_token=keys.access_token, access_token_secret=keys.access_secret)
+    api_v2 = auth_v2(keys.consumer_key, keys.consumer_secret, access_token=keys.access_token, access_token_secret=keys.access_secret)
 
     categories = ['age', 'alone', 'amazing', 'anger', 'architecture', 'art', 'attitude', 'beauty', 'best', 'birthday', 'business', 'car', 'change', 'communications', 'computers', 'cool', 'courage', 'dad', 'dating', 'death', 'design', 'dreams', 'education', 'environmental', 'equality', 'experience', 'failure', 'faith', 'family', 'famous', 'fear', 'fitness', 'food', 'forgiveness', 'freedom', 'friendship', 'funny', 'future', 'god', 'good', 'government', 'graduation', 'great', 'happiness', 'health', 'history', 'home', 'hope', 'humor', 'imagination', 'inspirational', 'intelligence', 'jealousy', 'knowledge', 'leadership', 'learning', 'legal', 'life', 'love', 'marriage', 'medical', 'men', 'mom', 'money', 'morning', 'movies', 'success']
     category = categories[random.randint(0, len(categories) - 1)]
@@ -16,43 +17,53 @@ def main():
     quote_data = get_quote(keys.ninja_api, category)
     author = quote_data[0]['author']
     quote = quote_data[0]['quote']
-    print(quote)
-    quote = add_new_lines(quote, 45)
+    quote = add_new_lines(quote, 30)
 
-    print(quote, author)
     image_date = get_image_data(keys.unsplash_api,f'{author},{category}')
 
-    img = download_img(keys.unsplash_api, image_date)
+    download_img(keys.unsplash_api, image_date, 'image.jpg')
 
-    # grayscale(img, 'modified.jpeg')
+    color = pick_font_color('image.jpg')
 
-    color = pick_font_color(img)
-    print(color)
+    media_path_pre = 'images/premod.jpg'
+    media_path_post = 'images/postmod.jpf'
 
-    modify_image(img, (1980, 1080), 'modified.jpeg', 'JPEG', 99)
+    modify_image('image.jpg', (1980, 1080), media_path_pre, 'JPEG', 99)
 
-    draw('modified.jpeg', 'bot.jpg', 'JPEG', quote, author, color)
+    draw(media_path_pre, media_path_post, 'JPEG', quote, author, color)
 
-    # client.create_tweet(text=f'{python_obj["quote"]}\n\n\"{python_obj["author"]}\"')
+    media = api_v1.media_upload(filename=media_path_post).media_id
 
-def auth(consumer_key: str, consumer_secret: str, access_token: str, access_token_secret: str) -> tweepy.Client:
+    # creating the tweet
+    api_v2.create_tweet(text=f'{quote_data[0]["quote"]}\nby: {author}', media_ids=[media])
+
+def auth(consumer_key: str, consumer_secret: str, access_token: str, access_token_secret: str) -> tweepy.API:
     try:
-        client = tweepy.Client(consumer_key=consumer_key,
-                           consumer_secret=consumer_secret,
-                           access_token=access_token,
-                           access_token_secret=access_token_secret)
+        auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+        auth.set_access_token(
+            access_token,
+            access_token_secret
+        )
+        return tweepy.API(auth)
+    except requests.exceptions.RequestException as e:
+        sys.exit(f"Request Error: {str(e)}")
+
+def auth_v2(api_key, api_secret, access_token, access_token_secret) -> tweepy.Client:
+    try:
+        client = tweepy.Client(
+            consumer_key=api_key,
+            consumer_secret=api_secret,
+            access_token=access_token,
+            access_token_secret=access_token_secret,
+        )
         return client
     except requests.exceptions.RequestException as e:
         sys.exit(f"Request Error: {str(e)}") 
 
-    
-
 def get_quote(api_key: str, category: str, limit: int=1) -> requests:
     try:
         response = requests.get(url='https://api.api-ninjas.com/v1/quotes', headers={'X-Api-Key': f'{api_key}'}, params={'limit': limit, 'category': category})
-        print(response)
         return response.json()
-
     except requests.exceptions.RequestException as e:
         sys.exit(f"Request Error: {str(e)}") 
 
@@ -82,7 +93,6 @@ def download_img(access_key: str, img_data, img_path: str='image.jpg') -> str:
 
     with open(img_path, 'wb') as f:
         f.write(img_response.content)
-        return f.name
 
 def grayscale(image_path: str, saved_image: str, format: str='JPEG', quality: int=99,  Grayscale: bool=True):
     if Grayscale:
@@ -108,7 +118,7 @@ def add_new_lines(string: str, slashed: int) -> str:
         except Exception:
             continue
         s[n+slashed] = '\n'
-        slashed+=45
+        slashed+=slashed
         if slashed > len(s):
             return ''.join(s)
 
@@ -120,7 +130,7 @@ def pick_font_color(image_path: str) -> str:
         except TypeError:
             sys.exit('The number of color values in the picture exceeds limit. Try increasing the limit, or try another image.')
         average_luminance = sum(luminances) / len(luminances)
-        
+
     if average_luminance > 0.5:
         return 'black'
     else:
