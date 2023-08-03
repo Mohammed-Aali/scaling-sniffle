@@ -10,14 +10,32 @@
 # new_text[result + 58] = '\n'
 # print("".join(new_text))
 
-qoute = 'Life is short, art long, opportunity fleeting, experience treacherous, judgment difficult.'
-qoute1 = 'Life is short, art long, opportunity fleeting, experience treacherous.'
-print(len(qoute1))
-if len(qoute) >= 58:
-    s = list(qoute)
-    n = s[58:].index(' ')
-    s[n+58] = '\n'
-    new_s = ''.join(s)
-    qoute1 = new_s
+quote = 'Life is short, art long, opportunity fleeting, experience treacherous, judgment difficult. And for those reasons life should be appreciated'
+quote1 = """When fast food is not a treat but a dietary staple,
+the children surf the internet all day
+in dark corners of the room and are bombarded
+with latest gadgets. Things replace parental
+standards."""
+print(len(quote))
+print(len(quote1))
+print(quote[40:45])
 
-print(qoute1)
+if 58 < len(quote):
+    slashed = 45
+    s = []
+    for char in quote:
+       s.append(char)
+    for char in s[slashed:]:
+        try:
+            n = s[slashed:].index(' ')
+        except:
+            continue
+        s[n+slashed] = '\n'
+        new_s = ''.join(s)
+        slashed+=45
+        if slashed > len(s):
+            break
+
+
+print(''.join(s))
+print(new_s)

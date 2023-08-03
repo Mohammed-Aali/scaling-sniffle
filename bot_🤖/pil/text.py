@@ -1,7 +1,6 @@
 from PIL import Image, ImageDraw, ImageFont
 
-quote = "Life is short, art long, opportunity fleeting, experience treacherous, judgment difficult.Life is short, art long, opportunity fleeting, experience treacherous, judgment difficult. Life is short, art long, opportunity fleeting, experience treacherous, judgment difficult."
-auther = 'Hippocrates'
+quote = "Don't think of yourself as a woman in business"
 print(len(quote))
 if 58 <= len(quote):
     slashed = 45
