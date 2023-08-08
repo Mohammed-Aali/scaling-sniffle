@@ -1,5 +1,3 @@
-from googletrans import Translator
-
 import json
 import keys
 import requests

@@ -19,7 +19,7 @@ def get_twitter_conn_v2(api_key, api_secret, access_token, access_token_secret) 
         access_token_secret=access_token_secret,
     )
     return client
-
+print()
 # get connections for both versions
 client_v1 = get_twitter_conn_v1(keys.consumer_key, keys.consumer_secret, keys.access_token, keys.access_secret)
 client_v2 = get_twitter_conn_v2(keys.consumer_key, keys.consumer_secret, keys.access_token, keys.access_secret)

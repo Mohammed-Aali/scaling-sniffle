@@ -1,3 +1,4 @@
+from colorthief import ColorThief
 from PIL import Image, ImageDraw, ImageFont, ImageColor
 import random
 import requests
@@ -15,18 +16,22 @@ def main():
     category = categories[random.randint(0, len(categories) - 1)]
 
     quote_data = get_quote(keys.ninja_api, category)
-    author = quote_data[0]['author']
-    quote = quote_data[0]['quote']
-    quote = add_new_lines(quote, 30)
+    try:
+        author = quote_data[0]['author']
+        quote = quote_data[0]['quote']
+    except KeyError:
+        sys.exit('Api response error')
+    quote = add_new_lines(quote, 45)
 
     image_date = get_image_data(keys.unsplash_api,f'{author},{category}')
 
     download_img(keys.unsplash_api, image_date, 'image.jpg')
 
     color = pick_font_color('image.jpg')
+    print(color)
 
     media_path_pre = 'images/premod.jpg'
-    media_path_post = 'images/postmod.jpf'
+    media_path_post = 'images/postmod.jpg'
 
     modify_image('image.jpg', (1980, 1080), media_path_pre, 'JPEG', 99)
 
@@ -35,7 +40,7 @@ def main():
     media = api_v1.media_upload(filename=media_path_post).media_id
 
     # creating the tweet
-    api_v2.create_tweet(text=f'{quote_data[0]["quote"]}\nby: {author}', media_ids=[media])
+    api_v2.create_tweet(text=f'"{quote_data[0]["quote"]}"\n\n{author}', media_ids=[media])
 
 def auth(consumer_key: str, consumer_secret: str, access_token: str, access_token_secret: str) -> tweepy.API:
     try:
@@ -109,33 +114,87 @@ def modify_image(image_path: str ,size: tuple[int, int], modified_file: str, for
 def add_new_lines(string: str, slashed: int) -> str:
     if len(string) <= slashed:
         return string
-    s = []
+    s =[]
     for char in string:
-       s.append(char)
-    for char in s[slashed:]:
-        try:
-            n = s[slashed:].index(' ')
-        except Exception:
-            continue
-        s[n+slashed] = '\n'
-        slashed+=slashed
-        if slashed > len(s):
+        s.append(char)
+
+    initial = slashed
+    while True:
+        n = string[:slashed].rindex(' ')
+        s[n] = '\n'
+        slashed += initial
+        if len(string) <= slashed:
             return ''.join(s)
 
 def pick_font_color(image_path: str) -> str:
-    with Image.open(image_path) as img:
-        colors = img.getcolors(1000000)
-        try:
-            luminances = [(0.299 * color[0] + 0.587 * color[1] + 0.114 * color[2]) / 255 for count, color in colors] 
-        except TypeError:
-            sys.exit('The number of color values in the picture exceeds limit. Try increasing the limit, or try another image.')
-        average_luminance = sum(luminances) / len(luminances)
+    color_thief = ColorThief(image_path)
+    dominant_color = color_thief.get_color(quality=10)
 
-    if average_luminance > 0.5:
-        return 'black'
+    red, green, blue = dominant_color
+    red = red/255.0
+    green = green/255.0
+    blue = blue/255.0
+
+    if red <= 0.03928:
+        red = red / 12.92
     else:
-        return 'white'
+        red = ((red + 0.055) / 1.055) ** 2.4
+
+    if green <= 0.3928:
+        green = green / 12.92
+    else:
+        green = ((green + 0.055) / 1.055) ** 2.4
+
+    if blue <= 0.03928: 
+        blue = blue / 12.92 
+    else:
+        blue = ((blue + 0.055) / 1.055) ** 2.4
+    
+    img_lum = (0.2126 * red + 0.7152 * green + 0.0722 * blue)
+    print(img_lum)
+    
+    red = ImageColor.getrgb('red')
+    yellow = ImageColor.getrgb('yellow')
+    green = ImageColor.getrgb('green')
+    aqua = ImageColor.getrgb('aqua')
+    blue = ImageColor.getrgb('blue')
+    purple = ImageColor.getrgb('purple')
+    silver = ImageColor.getrgb('silver')
+    olive = ImageColor.getrgb('olive')
+    font_colors = {'red': red, 'yellow': yellow, 'green': green, 'blue': blue, 'aqua': aqua, 'silver': silver, 'purple': purple, 'olive': olive}
+
+    best_color = ''
+    best_contrast = 0.0
+    for font_color, font_rgb in font_colors.items():
+        red, green, blue = font_rgb
+        red = red/255.0
+        green = green/255.0
+        blue = blue/255.0
+
+        if red <= 0.03928:
+            red = red / 12.92
+        else:
+            red = ((red + 0.055) / 1.055) ** 2.4
+
+        if green <= 0.3928:
+            green = green / 12.92
+        else:
+            green = ((green + 0.055) / 1.055) ** 2.4
+
+        if blue <= 0.03928: 
+            blue = blue / 12.92 
+        else:
+            blue = ((blue + 0.055) / 1.055) ** 2.4
         
+        font_lum = (0.2126 * red + 0.7152 * green + 0.0722 * blue)
+        contrast = (max(font_lum, img_lum) + 0.05) / (min(font_lum, img_lum) + 0.05)
+        print(contrast, font_color)
+        if contrast > best_contrast:
+            best_contrast = contrast
+            best_color = font_color
+    
+    return best_color
+  
 def draw(image_path: str, saved_image: str, format: str, quote: str, auther: str, font_color: str='black') -> None:
     with Image.open(image_path) as img:
         draw = ImageDraw.Draw(img)
