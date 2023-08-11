@@ -66,12 +66,12 @@ This project is licensed under the MIT License - see the [LICENSE](https://githu
 ## Acknowledgements
 I would like to thank the following sources for providing the APIs and libraries that made this project possible:
 
-- [Ninja] for providing random quotes on various topics
-- [Unsplash] for providing high-quality images on various topics
-- [Tweepy] for providing a Python wrapper for the Twitter API
-- [Pillow] for providing a Python imaging library
-- [ColorThief] for providing a Python module that extracts the dominant color from an image
-- [Pytest] for providing a Python framework for testing your code
-- [Requests] for providing a Python module that allows you to send HTTP requests
+- [Ninja](https://api-ninjas.com/) for providing random quotes on various topics
+- [Unsplash](https://unsplash.com/) for providing high-quality images on various topics
+- [Tweepy](https://www.tweepy.org/) for providing a Python wrapper for the Twitter API
+- [Pillow](https://python-pillow.org/) for providing a Python imaging library
+- [ColorThief](https://lokeshdhakar.com/projects/color-thief/) for providing a Python module that extracts the dominant color from an image
+- [Pytest](https://docs.pytest.org/en/7.4.x/) for providing a Python framework for testing your code
+- [Requests](https://requests.readthedocs.io/en/latest/) for providing a Python module that allows you to send HTTP requests
 
 I hope this README file meets your expectations. If you have any questions or feedback, feel free to contact me. PEACE.
