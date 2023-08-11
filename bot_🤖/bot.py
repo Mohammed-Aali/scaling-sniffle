@@ -28,7 +28,6 @@ def main():
     download_img(keys.unsplash_api, image_date, 'image.jpg')
 
     color = pick_font_color('image.jpg')
-    print(color)
 
     media_path_pre = 'images/premod.jpg'
     media_path_post = 'images/postmod.jpg'
@@ -151,7 +150,6 @@ def pick_font_color(image_path: str) -> str:
         blue = ((blue + 0.055) / 1.055) ** 2.4
     
     img_lum = (0.2126 * red + 0.7152 * green + 0.0722 * blue)
-    print(img_lum)
     
     red = ImageColor.getrgb('red')
     yellow = ImageColor.getrgb('yellow')
@@ -188,7 +186,6 @@ def pick_font_color(image_path: str) -> str:
         
         font_lum = (0.2126 * red + 0.7152 * green + 0.0722 * blue)
         contrast = (max(font_lum, img_lum) + 0.05) / (min(font_lum, img_lum) + 0.05)
-        print(contrast, font_color)
         if contrast > best_contrast:
             best_contrast = contrast
             best_color = font_color
