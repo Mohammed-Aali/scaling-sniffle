@@ -74,4 +74,4 @@ I would like to thank the following sources for providing the APIs and libraries
 - [Pytest] for providing a Python framework for testing your code
 - [Requests] for providing a Python module that allows you to send HTTP requests
 
-I hope this updated README file meets your expectations. If you have any questions or feedback, feel free to contact me. 😊
+I hope this README file meets your expectations. If you have any questions or feedback, feel free to contact me. PEACE.
